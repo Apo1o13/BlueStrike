@@ -1,0 +1,4 @@
+# BTPentest — Dependencias Python
+# Instalar con: pip install -r requirements.txt
+
+bleak>=0.21.0          # BLE scanning (opcional pero recomendado)
