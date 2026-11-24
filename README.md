@@ -30,7 +30,7 @@ BlueStrike es un framework de pentesting Bluetooth que automatiza el proceso com
 - **Reportes HTML y JSON** con dashboard oscuro exportable
 - Detección automática del tipo de dispositivo, fabricante, versión de Bluetooth y OS estimado
 - Compatible con VMware / VirtualBox (usa `bluetoothctl` como motor principal)
-- Sin falsos positivos — solo reporta vulnerabilidades verificadas
+- Hallazgos etiquetados por confianza: **candidato** (inferido por versión LMP/OS) u **observado** (servicio/capacidad real). La explotación la confirma el módulo de exploits; el análisis no afirma vulnerabilidad sin verificar
 
 ---
 

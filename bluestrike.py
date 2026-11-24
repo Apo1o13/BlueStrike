@@ -185,13 +185,17 @@ def interactive_mode():
     if not vulns:
         print(color("\n  [✓] No se detectaron vulnerabilidades conocidas en este dispositivo.", "green"))
     else:
-        print(color(f"\n  [!] {len(vulns)} VULNERABILIDAD(ES) DETECTADA(S):\n", "red"))
+        print(color(f"\n  [!] {len(vulns)} HALLAZGO(S) POTENCIAL(ES) — requieren verificacion:\n", "red"))
+        print(color("      candidato = inferido por version/OS  |  observado = capacidad/servicio real (sin explotar)\n", "white"))
         for i, v in enumerate(vulns, 1):
             sev_color = {"CRITICAL": "red", "HIGH": "red",
                          "MEDIUM": "yellow", "LOW": "blue"}.get(v["severity"], "white")
+            conf = v.get("confidence", "")
+            conf_txt = f"  ({conf})" if conf else ""
             print(color(f"  [{i}] {v['name']}", "white") +
-                  f"  [{color(v['severity'], sev_color)}]")
+                  f"  [{color(v['severity'], sev_color)}]{conf_txt}")
             print(f"       CVE      : {color(v.get('cve', 'N/A'), 'cyan')}")
+            print(f"       Confianza: {color(conf or 'N/A', 'yellow')} (sin explotar)")
             print(f"       Exploit  : {color(v.get('exploit_id', 'N/A'), 'yellow')}")
             print(f"       Detalle  : {v['description']}\n")
 
@@ -401,13 +405,14 @@ def cli_mode(args):
 
             vulns = report.get("vulnerabilities", [])
             if vulns:
-                print(color(f"\n  [!] {len(vulns)} vulnerabilidad(es) encontrada(s):", "red"))
+                print(color(f"\n  [!] {len(vulns)} hallazgo(s) potencial(es) (requieren verificacion):", "red"))
                 for v in vulns:
                     sev_color = {"CRITICAL": "red", "HIGH": "red",
                                  "MEDIUM": "yellow", "LOW": "blue"}.get(v["severity"], "white")
                     print(f"\n      {color('►', sev_color)} {color(v['name'], 'white')}  "
                           f"[{color(v['severity'], sev_color)}]")
                     print(f"        CVE     : {v.get('cve', 'N/A')}")
+                    print(f"        Confianza: {v.get('confidence', 'N/A')} (sin explotar)")
                     print(f"        Desc    : {v['description']}")
                     print(f"        Exploit : {color(v.get('exploit_id', 'N/A'), 'cyan')}")
             else:

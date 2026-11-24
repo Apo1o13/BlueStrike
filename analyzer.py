@@ -555,12 +555,26 @@ class VulnerabilityAnalyzer:
                     match = False
 
             if match:
+                # Confianza del hallazgo en la fase de ANALISIS (sin explotar):
+                #   - "candidato": inferido solo por version LMP / OS estimado
+                #     (p.ej. BlueBorne/KNOB/BIAS). No prueba explotabilidad: muchos
+                #     dispositivos en ese rango de version estan parcheados.
+                #   - "observado": se observo una capacidad/servicio/alcance real
+                #     (servicio anunciado, GATT sin auth, L2CAP alcanzable). Sigue
+                #     sin ser explotacion confirmada.
+                # La confirmacion real la aporta el modulo de exploits (verified).
+                active = any(k in cond for k in (
+                    "service", "gatt_service", "l2cap_reachable",
+                    "no_auth", "ble_visible", "service_count_min",
+                ))
                 found.append({
                     "name":        vuln["name"],
                     "cve":         vuln["cve"],
                     "severity":    vuln["severity"],
                     "description": vuln["description"],
                     "exploit_id":  vuln["exploit_id"],
+                    "confidence":  "observado" if active else "candidato",
+                    "verified":    False,
                 })
 
         return found

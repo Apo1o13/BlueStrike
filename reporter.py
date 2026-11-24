@@ -64,11 +64,15 @@ def generate_html_report(results: dict, output_file: str = "reporte_bluestrike.h
             sc = sev_color.get(v["severity"], "#8e8e93")
             sb = sev_bg.get(v["severity"], "rgba(0,0,0,0.1)")
             cve_badge = f'<span class="cve-badge">{v.get("cve","N/A")}</span>' if v.get("cve","N/A") != "N/A" else ""
+            conf = v.get("confidence", "")
+            conf_badge = (f'<span class="severity-badge" style="background:#6c6c70;" '
+                          f'title="Hallazgo sin explotar; requiere verificacion">{conf.upper()}</span>') if conf else ""
             vulns_html += f"""
             <div class="vuln-card" style="border-left: 3px solid {sc}; background: {sb};">
                 <div class="vuln-header">
                     <span class="vuln-name">{v['name']}</span>
                     <span class="severity-badge" style="background:{sc};">{v['severity']}</span>
+                    {conf_badge}
                 </div>
                 <div class="vuln-details">
                     {cve_badge}
